@@ -1,0 +1,18 @@
+POST  http://localhost:8080/signIn
+Content-Type: application/json
+
+{
+  "login": "nina@mail.com",
+  "password": "45566552"
+}
+
+<> 2019-12-06T054621.200.json
+<> 2019-12-06T054539.200.json
+<> 2019-12-06T053733.200.json
+<> 2019-12-06T053331.200.json
+<> 2019-12-06T053002.200.json
+<> 2019-12-06T043128.200.json
+<> 2019-12-06T041627.200.json
+
+###
+

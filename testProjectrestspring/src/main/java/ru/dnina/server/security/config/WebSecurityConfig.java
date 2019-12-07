@@ -1,0 +1,41 @@
+package ru.dnina.server.security.config;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import ru.dnina.server.models.Role;
+import ru.dnina.server.security.filters.TokenAuthFilter;
+
+
+@ComponentScan("ru.dnina.ru.dnina.server")
+@EnableWebSecurity
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    private AuthenticationProvider authenticationProvider;
+
+    @Autowired
+    private TokenAuthFilter tokenAuthFilter;
+
+    //TODO
+    //http code 500 when bed token
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+                .addFilterBefore(tokenAuthFilter, BasicAuthenticationFilter.class)
+                .antMatcher("/**")
+                .authenticationProvider(authenticationProvider)
+                .authorizeRequests()
+                .antMatchers("/api/users**").authenticated()
+                .antMatchers("/api/users/{user-id}/update**").hasAuthority(Role.ADMIN.toString())
+                .antMatchers("/api/signIn**").permitAll()
+                .antMatchers("/api/signOut**").permitAll()
+                .antMatchers("/api/signUp**").permitAll()
+                  .and()
+                .csrf().disable();
+    }
+}
