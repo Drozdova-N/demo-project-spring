@@ -1,5 +1,5 @@
-GET http://localhost:8080/users/3
-authentication: rOzEtXI2ru
+GET http://localhost:8080/api/users/3
+authentication: UCitvDSYXv
 
 <> 2019-12-06T041123.200.json
 <> 2019-12-06T032447.200.json

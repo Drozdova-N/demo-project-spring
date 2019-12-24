@@ -14,14 +14,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.dnina.server.forms.SignInForm;
-import ru.dnina.server.forms.SignInFormImpl;
+import ru.dnina.server.forms.impl.SignInFormImpl;
 import ru.dnina.server.models.Role;
 import ru.dnina.server.models.Token;
 import ru.dnina.server.models.User;
 import ru.dnina.server.repo.TokensRepository;
 import ru.dnina.server.repo.UsersRepository;
 import ru.dnina.server.services.SignInService;
-import ru.dnina.server.services.SignInServiceImpl;
+import ru.dnina.server.services.impl.SignInServiceImpl;
 import ru.dnina.server.transfer.TokenDto;
 
 import java.util.Optional;

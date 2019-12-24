@@ -1,5 +1,7 @@
 package ru.dnina.server.services;
 
+import ru.dnina.server.forms.UpdatePasswordForm;
+import ru.dnina.server.forms.UpdateRoleForm;
 import ru.dnina.server.forms.UpdateUserForm;
 import ru.dnina.server.transfer.UserDto;
 
@@ -12,4 +14,9 @@ public interface UserService {
     UserDto findUserById(Long id);
 
     UserDto updateUser(Long id, UpdateUserForm form);
+
+    UserDto updateRoleUser(Long id, UpdateRoleForm form);
+
+    void updatePasswordUser(Long id, UpdatePasswordForm form);
+
 }

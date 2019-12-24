@@ -1,4 +1,4 @@
-PUT http://localhost:8080/users/2/update
+PUT http://localhost:8080/api/users/2/update
 Content-Type: application/json
 authentication: E2lpUhq0sY
 

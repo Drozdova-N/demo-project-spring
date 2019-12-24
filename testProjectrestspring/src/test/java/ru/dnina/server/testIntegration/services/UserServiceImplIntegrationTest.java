@@ -13,14 +13,19 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
-import ru.dnina.server.forms.UpdateUserFormImpl;
+import ru.dnina.server.forms.UpdatePasswordForm;
+import ru.dnina.server.forms.UpdateRoleForm;
+import ru.dnina.server.forms.UpdateUserForm;
+import ru.dnina.server.forms.impl.UpdatePasswordFormImpl;
+import ru.dnina.server.forms.impl.UpdateRoleFormImpl;
+import ru.dnina.server.forms.impl.UpdateUserFormImpl;
 import ru.dnina.server.models.Role;
 import ru.dnina.server.models.User;
 import ru.dnina.server.repo.UsersRepository;
 import ru.dnina.server.services.UserService;
-import ru.dnina.server.services.UserServiceImpl;
+import ru.dnina.server.services.impl.UserServiceImpl;
 import ru.dnina.server.transfer.UserDto;
-import ru.dnina.server.util.ConvertModel;
+
 
 import java.util.Optional;
 
@@ -105,23 +110,25 @@ public class UserServiceImplIntegrationTest {
         try {
             userService.findUserById(id);
         } catch (IllegalArgumentException exp) {
-            assertThat(exp.getMessage()).isEqualTo("user not found");
+            assertThat(exp.getMessage()).isEqualTo("User not found");
         }
     }
 
     @Test
     public void whenValidId_thenUserShouldBeFoundForUpdate() {
         long id = 1;
-        UpdateUserFormImpl userForm = UpdateUserFormImpl
+        UpdateUserForm userForm = UpdateUserFormImpl
                 .builder()
                 .login("test@gmail.com")
                 .name("updateTest")
                 .phone("888-88-88")
-                .role(Role.ADMIN)
-                .password("123456789")
                 .build();
-
-        UserDto userDto = ConvertModel.UserFormInUserDto(id, userForm);
+        Optional<User> userOptional = usersRepository.findById(id);
+        User user = userOptional.get();
+        user.setLogin(userForm.getLogin());
+        user.setName(userForm.getName());
+        user.setPhone(userForm.getPhone());
+        UserDto userDto = UserDto.from(user);
         UserDto found = userService.updateUser(id, userForm);
         assertThat(found).isEqualTo(userDto);
     }
@@ -129,59 +136,146 @@ public class UserServiceImplIntegrationTest {
     @Test
     public void whenNotValidId_thenUserBeNotFoundForUpdate() {
         long id = 0;
-        UpdateUserFormImpl userForm = UpdateUserFormImpl
+        UpdateUserForm userForm = UpdateUserFormImpl
                 .builder()
                 .login("test@gmail.com")
                 .name("updateTest")
                 .phone("888-88-88")
-                .role(Role.ADMIN)
-                .password("123456789")
                 .build();
 
         try {
             userService.updateUser(id, userForm);
         } catch (IllegalArgumentException exp) {
-            assertThat(exp.getMessage()).isEqualTo("user not found");
+            assertThat(exp.getMessage()).isEqualTo("User not found");
         }
     }
 
     @Test
-    public void whenIncorrectForm_thenUserNotUpdate() {
+    public void whenIncorrectUpdateForm_thenUserNotUpdate() {
         long id = 1;
-        UpdateUserFormImpl userForm = UpdateUserFormImpl
+        UpdateUserForm userForm = UpdateUserFormImpl
                 .builder()
                 .login("test@gmail.com")
                 .phone("888-88-88")
-                .role(Role.ADMIN)
-                .password("123456789")
                 .build();
 
 
         try {
             userService.updateUser(id, userForm);
         } catch (IllegalArgumentException exp) {
-            assertThat(exp.getMessage()).isEqualTo("empty field");
+            assertThat(exp.getMessage()).isEqualTo("Empty field");
         }
     }
 
     @Test
     public void whenDuplicateLogin_thenUserNotUpdate() {
         long id = 1;
-        UpdateUserFormImpl userForm = UpdateUserFormImpl
+        UpdateUserForm userForm = UpdateUserFormImpl
                 .builder()
                 .login("testOther@gmail.com")
                 .name("updateTest")
                 .phone("888-88-88")
-                .role(Role.ADMIN)
-                .password("123456789")
                 .build();
 
         try {
             userService.updateUser(id, userForm);
         } catch (IllegalArgumentException exp) {
-            assertThat(exp.getMessage()).isEqualTo("user with that username exists");
+            assertThat(exp.getMessage()).isEqualTo("User with that username exists");
         }
     }
 
+
+    @Test
+    public void whenIncorrectRoleForm_thenRoleUserNotUpdate(){
+        long id =1;
+        UpdateRoleForm  roleForm = UpdateRoleFormImpl.builder().build();
+        try {
+            userService.updateRoleUser(id, roleForm);
+        }
+        catch (IllegalArgumentException exp) {
+            assertThat(exp.getMessage()).isEqualTo("Empty field");
+        }
+    }
+
+    @Test
+    public void whenNotValidId_thenRoleUserNotUpdate(){
+        long id =0;
+        UpdateRoleForm  roleForm = UpdateRoleFormImpl.builder().role(Role.USER).build();
+        try {
+            userService.updateRoleUser(id, roleForm);
+        }
+        catch (IllegalArgumentException exp) {
+            assertThat(exp.getMessage()).isEqualTo("User not found");
+        }
+    }
+
+    @Test
+    public void whenValidData_thenRoleUserUpdate(){
+        long id =1;
+        UpdateRoleForm  roleForm = UpdateRoleFormImpl.builder().role(Role.ADMIN).build();
+        Optional<User> optionalUser = usersRepository.findById(id);
+        User user = optionalUser.get();
+        user.setRole(roleForm.getRole());
+        UserDto userDto = UserDto.from(user);
+        UserDto found = userService.updateRoleUser(id, roleForm);
+        assertThat(found).isEqualTo(userDto);
+    }
+
+    @Test
+    public void whenIncorrectPasswordForm_thenPasswordUserNotUpdate(){
+        long id = 1;
+        UpdatePasswordForm passwordForm = UpdatePasswordFormImpl.builder()
+                .oldPassword("")
+                .newPassword("654123")
+                .build();
+        try {
+            userService.updatePasswordUser(id, passwordForm);
+        }
+        catch (IllegalArgumentException exp){
+            assertThat(exp.getMessage()).isEqualTo("Empty field");
+        }
+    }
+
+    @Test
+    public void whenNotValidId_thenPasswordUserNotUpdate(){
+        long id = 0;
+        UpdatePasswordForm passwordForm = UpdatePasswordFormImpl.builder()
+                .oldPassword("123456")
+                .newPassword("123456789")
+                .build();
+        try {
+            userService.updatePasswordUser(id, passwordForm);
+        }
+        catch (IllegalArgumentException exp){
+            assertThat(exp.getMessage()).isEqualTo("User not found");
+        }
+    }
+    @Test
+    public void whenOldPasswordIsNotCorrect_thenPasswordUserNotUpdate(){
+        long id = 1;
+        UpdatePasswordForm passwordForm = UpdatePasswordFormImpl.builder()
+                .oldPassword("12345678")
+                .newPassword("123456789")
+                .build();
+        try {
+            userService.updatePasswordUser(id, passwordForm);
+        }
+        catch (IllegalArgumentException exp){
+            assertThat(exp.getMessage()).isEqualTo("The old password was not entered correctly");
+        }
+    }
+
+    @Test
+    public void whenValidData_thenPasswordUserUpdate(){
+        long id = 1;
+        UpdatePasswordForm passwordForm = UpdatePasswordFormImpl.builder()
+                .oldPassword("123456")
+                .newPassword("123456789")
+                .build();
+        userService.updatePasswordUser(id, passwordForm);
+        Optional<User> optionalUser = usersRepository.findById(id);
+        optionalUser.ifPresent(user ->assertThat(passwordEncoder.matches(passwordForm.getNewPassword(), user.getHashPassword())));
+
+    }
 }
 

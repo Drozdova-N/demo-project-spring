@@ -4,10 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.dnina.server.forms.UpdateUserFormImpl;
+
+import ru.dnina.server.forms.UpdatePasswordForm;
+import ru.dnina.server.forms.UpdateRoleForm;
+import ru.dnina.server.forms.impl.UpdateUserFormImpl;
 import ru.dnina.server.services.UserService;
 import ru.dnina.server.transfer.UserDto;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
@@ -21,7 +26,9 @@ public class UserController {
     UserService userServices;
 
     @GetMapping("/users")
-    public List<UserDto> getUsers(){
+    public List<UserDto> getUsers(HttpServletRequest req, HttpServletResponse res) {
+       // res.setHeader("Access-Control-Allow-Origin", req.getHeader("Origin"));
+      //  res.setHeader("Access-Control-Allow-Headers", "Authorization, Cache-Control, Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
        return userServices.findAll();
     }
 
@@ -43,6 +50,27 @@ public class UserController {
         }
         catch (IllegalArgumentException exp){
             return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PutMapping("/users/{user-id}/update-role")
+    public ResponseEntity<UserDto> updateRoleUser(@PathVariable("user-id") Long id, @RequestBody UpdateRoleForm form){
+        try {
+            return ResponseEntity.ok(userServices.updateRoleUser(id, form));
+        }
+        catch (IllegalArgumentException exp){
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PutMapping("/users/{user-id}/update-pass")
+    public ResponseEntity<Object> updatePasswordUser(@PathVariable("user-id") Long id, @RequestBody UpdatePasswordForm form){
+        try {
+            userServices.updatePasswordUser(id, form);
+            return ResponseEntity.ok().build();
+        }
+        catch (IllegalArgumentException exp) {
+            return ResponseEntity.badRequest().body(exp.getMessage());
         }
     }
 }

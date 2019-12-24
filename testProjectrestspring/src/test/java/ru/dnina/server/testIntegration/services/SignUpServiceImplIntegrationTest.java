@@ -13,12 +13,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.dnina.server.forms.SignUpForm;
-import ru.dnina.server.forms.SignUpFormImpl;
+import ru.dnina.server.forms.impl.SignUpFormImpl;
 import ru.dnina.server.models.Role;
 import ru.dnina.server.models.User;
 import ru.dnina.server.repo.UsersRepository;
 import ru.dnina.server.services.SignUpService;
-import ru.dnina.server.services.SignUpServiceImpl;
+import ru.dnina.server.services.impl.SignUpServiceImpl;
 
 import java.util.Optional;
 

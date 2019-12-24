@@ -21,6 +21,5 @@ public class SignOutController {
     @GetMapping("/signOut")
     public void signOut(HttpServletRequest request, HttpServletResponse response)  {
         signOutService.signOut();
-
     }
 }

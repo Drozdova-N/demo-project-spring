@@ -11,7 +11,7 @@ import ru.dnina.server.models.Role;
 import ru.dnina.server.security.filters.TokenAuthFilter;
 
 
-@ComponentScan("ru.dnina.ru.dnina.server")
+@ComponentScan("ru.dnina.server")
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -21,8 +21,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private TokenAuthFilter tokenAuthFilter;
 
-    //TODO
-    //http code 500 when bed token
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -31,9 +30,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationProvider(authenticationProvider)
                 .authorizeRequests()
                 .antMatchers("/api/users**").authenticated()
-                .antMatchers("/api/users/{user-id}/update**").hasAuthority(Role.ADMIN.toString())
+                .antMatchers("/api/users/{user-id}/update-role").hasAuthority(Role.ADMIN.toString())
                 .antMatchers("/api/signIn**").permitAll()
-                .antMatchers("/api/signOut**").permitAll()
+                .antMatchers("/api/signOut**").authenticated()
                 .antMatchers("/api/signUp**").permitAll()
                   .and()
                 .csrf().disable();

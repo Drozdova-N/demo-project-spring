@@ -7,8 +7,8 @@ import ru.dnina.server.controllers.UserController;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-@RunWith(SpringRunner.class)
-@WebMvcTest(UserController.class)
+//@RunWith(SpringRunner.class)
+//@WebMvcTest(UserController.class)
 public class UserControllerIntegrationTest {
 //
 //

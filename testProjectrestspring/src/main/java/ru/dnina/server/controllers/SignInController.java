@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.dnina.server.forms.SignInFormImpl;
+
+import ru.dnina.server.forms.impl.SignInFormImpl;
 import ru.dnina.server.services.SignInService;
 import ru.dnina.server.transfer.TokenDto;
 

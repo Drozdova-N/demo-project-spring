@@ -1,11 +1,10 @@
-GET http://localhost:8080/api/users
-authentication: UCithjhhhvDSYXv
-
-<> 2019-12-06T075926.500.json
-<> 2019-12-06T075908.403.json
-<> 2019-12-06T075744.200.json
+GET  http://localhost:8080/api/users
+authentication: UCitvDSYXv
 
 ###
+
+
+
 
 
 
