@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
             try {
                 checkDuplicateUser(user, form);
                 usersRepository.save(apply(user, form));
-                return UserDto.from(user);
+                return UserDto.from(usersRepository.findById(id).get());
             } catch (IllegalArgumentException exp) {
                 throw exp;
             }
@@ -89,7 +89,7 @@ public class UserServiceImpl implements UserService {
             User user = optionalUser.get();
             user.setRole(form.getRole());
             usersRepository.save(user);
-            return UserDto.from(user);
+            return UserDto.from(usersRepository.findById(id).get());
         } else {
             throw new IllegalArgumentException("User not found");
         }

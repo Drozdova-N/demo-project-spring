@@ -1,6 +1,6 @@
 PUT http://localhost:8080/api/users/2/update-role
 Content-Type: application/json
-authentication: AQdG4eeIIF
+authentication: Sf21bEb2d4
 
 {
   "role": "ADMIN"
