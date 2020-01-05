@@ -56,10 +56,8 @@ public class UserServiceImpl implements UserService {
     public UserDto updateUser(Long id, UpdateUserForm form) throws IllegalArgumentException {
 
         //check correct form
-        if (form.getLogin() == null
-                || form.getLogin().equals("")
-                || form.getName() == null
-                || form.getName().equals("")){
+        if (form.getLogin() == null || form.getLogin().equals("")
+                || form.getName() == null || form.getName().equals("")){
             throw new IllegalArgumentException("Empty field");
         }
 
@@ -90,6 +88,7 @@ public class UserServiceImpl implements UserService {
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             user.setRole(form.getRole());
+            usersRepository.save(user);
             return UserDto.from(user);
         } else {
             throw new IllegalArgumentException("User not found");
@@ -110,6 +109,7 @@ public class UserServiceImpl implements UserService {
           User user  = optionalUser.get();
           if(passwordEncoder.matches(form.getOldPassword(), user.getHashPassword())){
               user.setHashPassword(passwordEncoder.encode(form.getNewPassword()));
+              usersRepository.save(user);
           }
           else {
               throw new IllegalArgumentException("The old password was not entered correctly");
