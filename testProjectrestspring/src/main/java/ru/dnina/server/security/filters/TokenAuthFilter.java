@@ -21,8 +21,9 @@ public class TokenAuthFilter implements Filter {
         if(token == null) {
             tokenAuthentication.setAuthenticated(false);
         }
-        else SecurityContextHolder.getContext().setAuthentication(tokenAuthentication);
-
+        else if(SecurityContextHolder.getContext().getAuthentication()== null) {
+            SecurityContextHolder.getContext().setAuthentication(tokenAuthentication);
+        }
         filterChain.doFilter(servletRequest, servletResponse);
     }
 }

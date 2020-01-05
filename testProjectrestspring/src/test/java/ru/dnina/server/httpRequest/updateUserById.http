@@ -1,13 +1,11 @@
 PUT http://localhost:8080/api/users/2/update
 Content-Type: application/json
-authentication: E2lpUhq0sY
+authentication: AQdG4eeIIF
 
 {
   "login": "nina@mail.com",
   "name": "nina Drozdova",
-  "phone": "8-918-839-64-84",
-  "password" : "45566552",
-  "role": "USER"
+  "phone": "8-918-839-64-84"
 }
 
 <> 2019-12-06T041245.200.json

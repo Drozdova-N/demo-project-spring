@@ -1,13 +1,17 @@
 package ru.dnina.server.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.dnina.server.forms.UpdatePasswordForm;
 import ru.dnina.server.forms.UpdateRoleForm;
 import ru.dnina.server.forms.UpdateUserForm;
+import ru.dnina.server.models.Token;
 import ru.dnina.server.models.User;
 import ru.dnina.server.repo.UsersRepository;
+import ru.dnina.server.security.details.UserDetailsImpl;
 import ru.dnina.server.services.UserService;
 import ru.dnina.server.transfer.UserDto;
 
@@ -38,6 +42,14 @@ public class UserServiceImpl implements UserService {
         } else {
             throw new IllegalArgumentException("User not found");
         }
+    }
+
+
+    @Override
+    public UserDto findAuthorizedUser() {
+    UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getDetails();
+    User currentUser = userDetails.getUser();
+        return UserDto.from(currentUser);
     }
 
     @Override
@@ -71,7 +83,7 @@ public class UserServiceImpl implements UserService {
     public UserDto updateRoleUser(Long id, UpdateRoleForm form) {
 
         //check correct form
-        if (form.getRole() == null || form.getRole().equals("")) {
+        if (form.getRole() == null) {
             throw new IllegalArgumentException("Empty field");
         }
         Optional<User> optionalUser = usersRepository.findById(id);

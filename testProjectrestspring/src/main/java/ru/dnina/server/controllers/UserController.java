@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 
 import ru.dnina.server.forms.UpdatePasswordForm;
 import ru.dnina.server.forms.UpdateRoleForm;
+import ru.dnina.server.forms.impl.UpdatePasswordFormImpl;
+import ru.dnina.server.forms.impl.UpdateRoleFormImpl;
 import ru.dnina.server.forms.impl.UpdateUserFormImpl;
 import ru.dnina.server.services.UserService;
 import ru.dnina.server.transfer.UserDto;
@@ -27,9 +29,7 @@ public class UserController {
 
     @GetMapping("/users")
     public List<UserDto> getUsers(HttpServletRequest req, HttpServletResponse res) {
-       // res.setHeader("Access-Control-Allow-Origin", req.getHeader("Origin"));
-      //  res.setHeader("Access-Control-Allow-Headers", "Authorization, Cache-Control, Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
-       return userServices.findAll();
+        return userServices.findAll();
     }
 
     @GetMapping("/users/{user-id}")
@@ -43,6 +43,16 @@ public class UserController {
 
     }
 
+    @GetMapping("/users/authorized-user")
+    public ResponseEntity<UserDto> getAuthorizedUser(){
+        try {
+           return ResponseEntity.ok(userServices.findAuthorizedUser());
+        }
+        catch (Exception exp){
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @PutMapping("/users/{user-id}/update")
     public ResponseEntity<UserDto> updateUser(@PathVariable("user-id") Long id, @RequestBody UpdateUserFormImpl form){
         try {
@@ -54,7 +64,7 @@ public class UserController {
     }
 
     @PutMapping("/users/{user-id}/update-role")
-    public ResponseEntity<UserDto> updateRoleUser(@PathVariable("user-id") Long id, @RequestBody UpdateRoleForm form){
+    public ResponseEntity<UserDto> updateRoleUser(@PathVariable("user-id") Long id, @RequestBody UpdateRoleFormImpl form){
         try {
             return ResponseEntity.ok(userServices.updateRoleUser(id, form));
         }
@@ -64,7 +74,7 @@ public class UserController {
     }
 
     @PutMapping("/users/{user-id}/update-pass")
-    public ResponseEntity<Object> updatePasswordUser(@PathVariable("user-id") Long id, @RequestBody UpdatePasswordForm form){
+    public ResponseEntity<Object> updatePasswordUser(@PathVariable("user-id") Long id, @RequestBody UpdatePasswordFormImpl form){
         try {
             userServices.updatePasswordUser(id, form);
             return ResponseEntity.ok().build();

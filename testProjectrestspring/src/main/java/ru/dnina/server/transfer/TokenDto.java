@@ -13,9 +13,7 @@ import ru.dnina.server.models.Token;
 public class TokenDto {
 
     private String value;
-    private Long idUser;
-
     public static TokenDto from(Token token){
-        return new TokenDto(token.getValue(), token.getId());
+        return new TokenDto(token.getValue());
     }
 }
