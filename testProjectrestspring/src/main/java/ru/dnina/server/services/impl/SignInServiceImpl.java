@@ -27,6 +27,10 @@ public class SignInServiceImpl implements SignInService {
 
     @Override
     public TokenDto signIn(SignInForm form) throws IllegalArgumentException {
+        if(form.getLogin()== null || form.getPassword()==null) {
+            throw new IllegalArgumentException("Empty field");
+        }
+
         Optional<User> userOptional = usersRepository.findByLogin(form.getLogin());
         if(userOptional.isPresent()){
             User user = userOptional.get();

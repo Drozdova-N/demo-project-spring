@@ -2,13 +2,11 @@ package ru.dnina.server.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.dnina.server.forms.UpdatePasswordForm;
 import ru.dnina.server.forms.UpdateRoleForm;
 import ru.dnina.server.forms.UpdateUserForm;
-import ru.dnina.server.models.Token;
 import ru.dnina.server.models.User;
 import ru.dnina.server.repo.UsersRepository;
 import ru.dnina.server.security.details.UserDetailsImpl;
@@ -19,7 +17,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-
 public class UserServiceImpl implements UserService {
 
 
@@ -56,8 +53,7 @@ public class UserServiceImpl implements UserService {
     public UserDto updateUser(Long id, UpdateUserForm form) throws IllegalArgumentException {
 
         //check correct form
-        if (form.getLogin() == null || form.getLogin().equals("")
-                || form.getName() == null || form.getName().equals("")){
+        if (form.getLogin() == null || form.getName() == null){
             throw new IllegalArgumentException("Empty field");
         }
 
@@ -89,7 +85,7 @@ public class UserServiceImpl implements UserService {
             User user = optionalUser.get();
             user.setRole(form.getRole());
             usersRepository.save(user);
-            return UserDto.from(usersRepository.findById(id).get());
+            return UserDto.from(user);
         } else {
             throw new IllegalArgumentException("User not found");
         }
@@ -98,13 +94,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updatePasswordUser(Long id, UpdatePasswordForm form) {
         //check correct form
-      if(form.getOldPassword()== null ||form.getOldPassword().equals("")
-                                      || form.getNewPassword()==null
-                                      || form.getNewPassword().equals("")){
+      if(form.getOldPassword()== null || form.getNewPassword()==null){
           throw  new IllegalArgumentException("Empty field");
       }
 
       Optional<User> optionalUser = usersRepository.findById(id);
+
       if(optionalUser.isPresent()){
           User user  = optionalUser.get();
           if(passwordEncoder.matches(form.getOldPassword(), user.getHashPassword())){

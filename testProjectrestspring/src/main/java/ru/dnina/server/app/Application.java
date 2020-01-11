@@ -14,7 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @ComponentScan(basePackages = "ru.dnina.server")
 @EnableJpaRepositories(basePackages = "ru.dnina.server.repo")
 @EntityScan(basePackages = "ru.dnina.server.models")
-    public class Application  {
+    public class Application {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -24,5 +24,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
     public static void main(String[] args) {
         SpringApplication.run(Application.class);
     }
-}
 
+
+}

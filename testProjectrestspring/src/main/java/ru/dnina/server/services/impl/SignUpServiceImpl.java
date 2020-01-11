@@ -23,11 +23,11 @@ public class SignUpServiceImpl implements SignUpService {
         if(form.getLogin() == null
                 || form.getName()== null
                 || form.getPassword()==null) {
-            throw new IllegalArgumentException("empty field");
+            throw new IllegalArgumentException("Empty field");
         }
 
         if(usersRepository.findByLogin(form.getLogin()).isPresent()) {
-            throw new IllegalArgumentException("user with that username exists");
+            throw new IllegalArgumentException("User with that username exists");
         }
          usersRepository.save(apply(form));
     }
