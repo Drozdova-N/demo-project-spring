@@ -53,7 +53,8 @@ public class UserServiceImpl implements UserService {
     public UserDto updateUser(Long id, UpdateUserForm form) throws IllegalArgumentException {
 
         //check correct form
-        if (form.getLogin() == null || form.getName() == null){
+        if (form.getLogin() == null  || form.getLogin().equals("")
+                || form.getName() == null || form.getName().equals("")){
             throw new IllegalArgumentException("Empty field");
         }
 
@@ -94,7 +95,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updatePasswordUser(Long id, UpdatePasswordForm form) {
         //check correct form
-      if(form.getOldPassword()== null || form.getNewPassword()==null){
+      if(form.getOldPassword()== null || form.getNewPassword()==null || form.getNewPassword().equals("")){
           throw  new IllegalArgumentException("Empty field");
       }
 
@@ -124,9 +125,9 @@ public class UserServiceImpl implements UserService {
     }
 
     private void checkDuplicateUser(User user, UpdateUserForm form) throws IllegalArgumentException {
-        Optional<User> checkDuplicate = usersRepository.findByLogin(form.getLogin());
-        if (checkDuplicate.isPresent()) {
-            if (!checkDuplicate.get().getLogin().equals(user.getLogin())) {
+        Optional<User> optional = usersRepository.findByLogin(form.getLogin());
+        if (optional.isPresent()) {
+            if (!optional.get().getLogin().equals(user.getLogin())) {
                 throw new IllegalArgumentException("User with that username exists");
             }
         }

@@ -20,9 +20,9 @@ public class SignUpServiceImpl implements SignUpService {
 
     @Override
     public void signUp(SignUpForm form) throws IllegalArgumentException {
-        if(form.getLogin() == null
-                || form.getName()== null
-                || form.getPassword()==null) {
+        if(form.getLogin() == null || form.getLogin().equals("")
+                || form.getName()== null || form.getName().equals("")
+                || form.getPassword()==null || form.getPassword().equals("")) {
             throw new IllegalArgumentException("Empty field");
         }
 
